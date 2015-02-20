@@ -17,6 +17,8 @@ SET(CPACK_PACKAGE_VENDOR "Hyperic")
 SET(CMAKE_MACOSX_RPATH 1)
 INCLUDE(CPack)
 
+INCLUDE_DIRECTORIES(/usr/include/luajit-5.1 /usr/include/luajit-5.2 /usr/include/lua5.1)
+
 IF(WIN32) 
 	## make sure we only use the smallest set of 
 	## headers on win32. Otherwise we get clashes 
