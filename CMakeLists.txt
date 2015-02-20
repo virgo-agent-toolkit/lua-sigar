@@ -1,4 +1,4 @@
-PROJECT(sigar C)
+PROJECT(sigar)
 
 cmake_minimum_required(VERSION 2.6)
 
@@ -113,7 +113,7 @@ IF (CMAKE_SYSTEM_NAME MATCHES "(AIX)" )
 ENDIF(CMAKE_SYSTEM_NAME MATCHES "(AIX)" )
 
 IF(WIN32)
-  SET(SIGAR_SRC deps/sigar/src/os/win32/peb.c deps/sigar/src/os/win32/win32_sigar.c)
+  SET(SIGAR_SRC deps/sigar/src/os/win32/wmi.cpp deps/sigar/src/os/win32/peb.c deps/sigar/src/os/win32/win32_sigar.c)
   INCLUDE_DIRECTORIES(deps/sigar/src/os/win32)
   CHECK_STRUCT_MEMBER(MIB_IPADDRROW wType "windows.h;iphlpapi.h" wType_in_MIB_IPADDRROW)
   add_definitions(-DHAVE_MIB_IPADDRROW_WTYPE=${wType_in_MIB_IPADDRROW})
