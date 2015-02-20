@@ -29,6 +29,11 @@ IF(WIN32)
 	ADD_DEFINITIONS(-D_CRT_SECURE_NO_WARNINGS)
 ENDIF(WIN32)
 
+include_directories(
+  /usr/include/luajit-2.0
+  /usr/local/include/luajit-2.0
+)
+
 ## sigar has some base files + a set of platform specific files
 
 MESSAGE(STATUS "CMAKE_SYSTEM_NAME is ${CMAKE_SYSTEM_NAME}")
@@ -128,6 +133,11 @@ SET(SIGAR_SRC ${SIGAR_SRC}
 )
 
 ADD_LIBRARY(rsigar STATIC ${SIGAR_SRC})
+
+IF( UNIX AND (CMAKE_SYSTEM_PROCESSOR STREQUAL "x86_64"  ))
+  SET_TARGET_PROPERTIES(rsigar PROPERTIES COMPILE_FLAGS "-fPIC")
+ENDIF( CMAKE_SYSTEM_PROCESSOR STREQUAL "x86_64"  )
+
 IF(WIN32)
 	TARGET_LINK_LIBRARIES(rsigar ws2_32 netapi32 version)
 ENDIF(WIN32)
