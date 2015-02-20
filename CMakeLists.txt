@@ -29,15 +29,11 @@ IF(WIN32)
 	ADD_DEFINITIONS(-D_CRT_SECURE_NO_WARNINGS)
 ENDIF(WIN32)
 
-include_directories(
-  /usr/include/luajit-2.0
-  /usr/local/include/luajit-2.0
-)
-
 ## sigar has some base files + a set of platform specific files
 
 MESSAGE(STATUS "CMAKE_SYSTEM_NAME is ${CMAKE_SYSTEM_NAME}")
 
+ADD_DEFINITIONS(-DLUA_BUILD_AS_DLL -DLUA_LIB)
 INCLUDE_DIRECTORIES(deps/sigar/include/)
 
 INCLUDE(CheckCSourceCompiles)
@@ -130,19 +126,6 @@ SET(SIGAR_SRC ${SIGAR_SRC}
   deps/sigar/src/sigar_ptql.c
   deps/sigar/src/sigar_signal.c
   deps/sigar/src/sigar_util.c
-)
-
-ADD_LIBRARY(rsigar STATIC ${SIGAR_SRC})
-
-IF( UNIX AND (CMAKE_SYSTEM_PROCESSOR STREQUAL "x86_64"  ))
-  SET_TARGET_PROPERTIES(rsigar PROPERTIES COMPILE_FLAGS "-fPIC")
-ENDIF( CMAKE_SYSTEM_PROCESSOR STREQUAL "x86_64"  )
-
-IF(WIN32)
-	TARGET_LINK_LIBRARIES(rsigar ws2_32 netapi32 version)
-ENDIF(WIN32)
-
-ADD_LIBRARY(sigar SHARED
   deps/sigar/bindings/lua/sigar-cpu.c                 
   deps/sigar/bindings/lua/sigar-disk.c                
   deps/sigar/bindings/lua/sigar-fs.c                  
@@ -155,6 +138,16 @@ ADD_LIBRARY(sigar SHARED
   deps/sigar/bindings/lua/sigar-who.c                 
   deps/sigar/bindings/lua/sigar.c                     
 )
+
+ADD_LIBRARY(sigar SHARED ${SIGAR_SRC})
+
+IF( UNIX AND (CMAKE_SYSTEM_PROCESSOR STREQUAL "x86_64"  ))
+  SET_TARGET_PROPERTIES(sigar PROPERTIES COMPILE_FLAGS "-fPIC")
+ENDIF( CMAKE_SYSTEM_PROCESSOR STREQUAL "x86_64"  )
+
+IF(WIN32)
+	TARGET_LINK_LIBRARIES(sigar ws2_32 netapi32 version)
+ENDIF(WIN32)
 
 IF (UNIX)
   SET_TARGET_PROPERTIES(sigar
@@ -172,9 +165,6 @@ IF (WIN32)
   )
 ENDIF (WIN32)
 
-TARGET_LINK_LIBRARIES(sigar rsigar)
-
 IF(SIGAR_LINK_FLAGS)
   SET_TARGET_PROPERTIES(sigar PROPERTIES LINK_FLAGS "${SIGAR_LINK_FLAGS}")
 ENDIF(SIGAR_LINK_FLAGS)
-
