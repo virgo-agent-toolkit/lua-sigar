@@ -20,15 +20,15 @@ INCLUDE(CPack)
 INCLUDE_DIRECTORIES(deps/lua)
 
 IF(WIN32) 
-	## make sure we only use the smallest set of 
-	## headers on win32. Otherwise we get clashes 
-	## between winsock2.h and winsock.h
-	ADD_DEFINITIONS(-DWIN32_LEAN_AND_MEAN)
+  ## make sure we only use the smallest set of 
+  ## headers on win32. Otherwise we get clashes 
+  ## between winsock2.h and winsock.h
+  ADD_DEFINITIONS(-DWIN32_LEAN_AND_MEAN)
 
-	# force the correct version for the redist manifest
-	ADD_DEFINITIONS(-D_BIND_TO_CURRENT_MFC_VERSION=1 -D_BIND_TO_CURRENT_CRT_VERSION=1)
-	# turn off security warnings for system calls
-	ADD_DEFINITIONS(-D_CRT_SECURE_NO_WARNINGS)
+  # force the correct version for the redist manifest
+  ADD_DEFINITIONS(-D_BIND_TO_CURRENT_MFC_VERSION=1 -D_BIND_TO_CURRENT_CRT_VERSION=1)
+  # turn off security warnings for system calls
+  ADD_DEFINITIONS(-D_CRT_SECURE_NO_WARNINGS)
 
   # Download luvi.lib
   FILE(DOWNLOAD
