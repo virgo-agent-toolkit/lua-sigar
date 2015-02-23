@@ -7,4 +7,4 @@ GOTO :build
 :build
 cmake -H. -Bbuild -G"Visual Studio 12 Win64"
 cmake --build build --config Release -- /maxcpucount
-COPY build/Release/sigar.dll .
+COPY build\Release\sigar.dll .
