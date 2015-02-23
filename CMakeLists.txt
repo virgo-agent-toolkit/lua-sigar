@@ -29,6 +29,12 @@ IF(WIN32)
 	ADD_DEFINITIONS(-D_BIND_TO_CURRENT_MFC_VERSION=1 -D_BIND_TO_CURRENT_CRT_VERSION=1)
 	# turn off security warnings for system calls
 	ADD_DEFINITIONS(-D_CRT_SECURE_NO_WARNINGS)
+
+  # Download luvi.lib
+  FILE(DOWNLOAD
+    "https://github.com/luvit/luvi/releases/download/v0.7.1/luvi-static-Windows-amd64.lib"
+    "${CMAKE_BINARY_DIR}/luvi.lib"
+  )
 ENDIF(WIN32)
 
 ## sigar has some base files + a set of platform specific files
@@ -148,7 +154,7 @@ IF(UNIX AND (CMAKE_SYSTEM_PROCESSOR STREQUAL "x86_64"))
 ENDIF(UNIX AND (CMAKE_SYSTEM_PROCESSOR STREQUAL "x86_64"))
 
 IF(WIN32)
-	TARGET_LINK_LIBRARIES(sigar ws2_32 netapi32 version)
+	TARGET_LINK_LIBRARIES(sigar luvi ws2_32 netapi32 version)
 ENDIF(WIN32)
 
 IF (UNIX)
