@@ -137,6 +137,7 @@ SET(SIGAR_SRC ${SIGAR_SRC}
   deps/sigar/bindings/lua/sigar-cpu.c                 
   deps/sigar/bindings/lua/sigar-disk.c                
   deps/sigar/bindings/lua/sigar-fs.c                  
+  deps/sigar/bindings/lua/sigar-load.c                 
   deps/sigar/bindings/lua/sigar-mem.c                 
   deps/sigar/bindings/lua/sigar-netif.c               
   deps/sigar/bindings/lua/sigar-proc.c                
