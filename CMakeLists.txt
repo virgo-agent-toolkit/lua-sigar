@@ -47,12 +47,12 @@ IF(WIN32)
 
   # Download luvi.lib
   FILE(DOWNLOAD
-    "https://github.com/luvit/luvi/releases/download/v2.0.9/luvi-static-Windows-amd64.lib"
+    "https://github.com/luvit/luvi/releases/download/v2.0.9/luvi-regular-Windows-amd64.lib"
     "${CMAKE_BINARY_DIR}/luvi.lib"
   )
   # Download luvi_renamed.lib to support renaming luvi.exe
   FILE(DOWNLOAD
-    "https://github.com/luvit/luvi/releases/download/v2.0.9/luvi_renamed-static-Windows-amd64.lib"
+    "https://github.com/luvit/luvi/releases/download/v2.0.9/luvi_renamed-regular-Windows-amd64.lib"
     "${CMAKE_BINARY_DIR}/luvi_renamed.lib"
   )
   # Delay load luvi.exe when loaded as support code by this DLL
