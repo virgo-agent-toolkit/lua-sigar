@@ -34,7 +34,17 @@ INCLUDE(CPack)
 
 INCLUDE_DIRECTORIES(deps/lua)
 
-IF(WIN32) 
+IF(WIN32)
+  IF(CMAKE_SIZEOF_VOID_P EQUAL 4)
+    SET(WIN_ARCH "ia32")
+    SET(DELAY_LOAD_HOOK "___pfnDliFailureHook2")
+  ELSEIF(CMAKE_SIZEOF_VOID_P EQUAL 8)
+    SET(WIN_ARCH "amd64")
+    SET(DELAY_LOAD_HOOK "__pfnDliFailureHook2")
+  ELSE()
+    MESSAGE("Windows Arch Unknown")
+  ENDIF()
+
   ## make sure we only use the smallest set of 
   ## headers on win32. Otherwise we get clashes 
   ## between winsock2.h and winsock.h
@@ -45,18 +55,20 @@ IF(WIN32)
   # turn off security warnings for system calls
   ADD_DEFINITIONS(-D_CRT_SECURE_NO_WARNINGS)
 
-  # Download luvi.lib
+  # Download luvi-XXX.lib
+  SET(LUVI_LIB "luvi-regular-Windows-${WIN_ARCH}.lib")
   FILE(DOWNLOAD
-    "https://github.com/luvit/luvi/releases/download/v2.0.9/luvi-regular-Windows-amd64.lib"
-    "${CMAKE_BINARY_DIR}/luvi.lib"
+    "https://github.com/luvit/luvi/releases/download/v2.0.9/${LUVI_LIB}"
+    "${CMAKE_BINARY_DIR}/${LUVI_LIB}"
   )
-  # Download luvi_renamed.lib to support renaming luvi.exe
+  # Download luvi_renamed-XXX.lib to support renaming luvi.exe
+  SET(LUVI_RENAMED_LIB "luvi_renamed-regular-Windows-${WIN_ARCH}.lib")
   FILE(DOWNLOAD
-    "https://github.com/luvit/luvi/releases/download/v2.0.9/luvi_renamed-regular-Windows-amd64.lib"
-    "${CMAKE_BINARY_DIR}/luvi_renamed.lib"
+    "https://github.com/luvit/luvi/releases/download/v2.0.9/${LUVI_RENAMED_LIB}"
+    "${CMAKE_BINARY_DIR}/${LUVI_RENAMED_LIB}"
   )
   # Delay load luvi.exe when loaded as support code by this DLL
-  SET(SIGAR_LINK_FLAGS "${SIGAR_LINK_FLAGS} /DELAYLOAD:luvi.exe /INCLUDE:__pfnDliFailureHook2")
+  SET(SIGAR_LINK_FLAGS "${SIGAR_LINK_FLAGS} /DELAYLOAD:luvi.exe /INCLUDE:${DELAY_LOAD_HOOK}")
 ENDIF(WIN32)
 
 ## sigar has some base files + a set of platform specific files
@@ -177,7 +189,7 @@ IF(UNIX AND (CMAKE_SYSTEM_PROCESSOR STREQUAL "x86_64"))
 ENDIF(UNIX AND (CMAKE_SYSTEM_PROCESSOR STREQUAL "x86_64"))
 
 IF(WIN32)
-	TARGET_LINK_LIBRARIES(sigar luvi luvi_renamed ws2_32 netapi32 version)
+	TARGET_LINK_LIBRARIES(sigar ${LUVI_LIB} ${LUVI_RENAMED_LIB} ws2_32 netapi32 version)
 ENDIF(WIN32)
 
 IF (UNIX)
